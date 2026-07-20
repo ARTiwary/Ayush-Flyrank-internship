@@ -51,5 +51,5 @@ A CV or LinkedIn profile only lists abstract keywords and bullet points, but thi
 
 If you are a technical founder looking for someone who can bridge the gap between complex ML models and high-performance full-stack interfaces:
 
-* **Primary Action:** Email me a technical interview challenge at **ayush@example.com** 
+* **Primary Action:** Email me a technical interview challenge at **ayushrajtiwary07@gmail.com** 
 * **Connect:** [LinkedIn](https://www.linkedin.com/in/ayush-raj-tiwary-3b4392227/) | [GitHub](https://github.com/ARTiwary)
