@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Identity Kit — Ayush Raj Tiwary</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14171C;
+    --paper:#F6F4EF;
+    --teal:#1E4D45;
+    --teal-dim:#2C645A;
+    --amber:#C68A32;
+    --line:#DEDACF;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mono-label{
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:64px 32px 96px;
+  }
+
+  /* HEADER */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    margin-bottom:64px;
+    flex-wrap:wrap;
+  }
+  .badge{
+    width:64px;height:64px;
+    border-radius:14px;
+    background:var(--teal);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+    box-shadow:0 1px 0 rgba(20,23,28,0.06);
+  }
+  .badge svg{width:38px;height:38px;display:block;}
+  .head-text h1{
+    font-size:15px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    margin:0 0 4px;
+    color:var(--teal);
+    font-weight:600;
+  }
+  .head-text p{
+    margin:0;
+    font-size:14px;
+    color:#6B6A63;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:#8C897E;
+    text-transform:uppercase;
+  }
+
+  section{margin-bottom:56px;}
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    border-bottom:1px solid var(--line);
+    padding-bottom:12px;
+    margin-bottom:28px;
+  }
+  .section-head h2{
+    font-size:22px;
+    margin:0;
+    font-weight:600;
+  }
+
+  /* TYPE SPECIMEN */
+  .specimen-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+  }
+  .specimen{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:28px 24px;
+  }
+  .specimen .role{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--amber);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    margin-bottom:14px;
+  }
+  .specimen .big{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:40px;
+    font-weight:600;
+    line-height:1.05;
+    margin:0 0 8px;
+  }
+  .specimen.body .big{
+    font-family:'Inter',sans-serif;
+    font-size:20px;
+    font-weight:400;
+  }
+  .specimen .meta{
+    font-size:13px;
+    color:#8C897E;
+    margin-top:12px;
+  }
+  .specimen .meta b{color:var(--ink);font-weight:600;}
+
+  /* PALETTE */
+  .palette-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+  }
+  .swatch{
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:var(--card);
+    cursor:pointer;
+    position:relative;
+  }
+  .swatch .fill{height:88px;}
+  .swatch .info{
+    padding:12px 14px;
+  }
+  .swatch .name{
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:2px;
+  }
+  .swatch .hex{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:#6B6A63;
+  }
+  .swatch .copied{
+    position:absolute;
+    top:8px;right:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    background:rgba(20,23,28,0.7);
+    color:#fff;
+    padding:2px 6px;
+    border-radius:4px;
+    opacity:0;
+    transition:opacity .2s;
+    pointer-events:none;
+  }
+  .swatch.copied-active .copied{opacity:1;}
+
+  /* LOGO / FAVICON */
+  .mark-row{
+    display:flex;
+    align-items:center;
+    gap:36px;
+    flex-wrap:wrap;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:32px;
+  }
+  .mark-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+  }
+  .mark-item span{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:#8C897E;
+  }
+  .mark-lg{width:96px;height:96px;border-radius:20px;background:var(--teal);display:flex;align-items:center;justify-content:center;}
+  .mark-lg svg{width:56px;height:56px;}
+  .mark-md{width:56px;height:56px;border-radius:12px;background:var(--teal);display:flex;align-items:center;justify-content:center;}
+  .mark-md svg{width:32px;height:32px;}
+  .mark-sm{width:32px;height:32px;border-radius:7px;background:var(--teal);display:flex;align-items:center;justify-content:center;}
+  .mark-sm svg{width:19px;height:19px;}
+  .mark-wordmark{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:26px;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex:1;
+    min-width:220px;
+  }
+  .mark-wordmark .tag{
+    font-family:'Inter',sans-serif;
+    font-size:12px;
+    font-weight:400;
+    color:#8C897E;
+    display:block;
+    margin-top:2px;
+  }
+  .mark-wordmark .name-block{display:flex;flex-direction:column;}
+
+  /* STYLE NOTE */
+  .note{
+    background:var(--teal);
+    color:var(--paper);
+    border-radius:12px;
+    padding:32px;
+    position:relative;
+  }
+  .note .role{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:14px;
+  }
+  .note p{
+    font-size:17px;
+    margin:0 0 10px;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:500;
+    line-height:1.55;
+  }
+  .note .hexline{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:#CFE3DD;
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px solid rgba(246,244,239,0.2);
+  }
+
+  footer{
+    text-align:center;
+    font-size:12px;
+    color:#8C897E;
+    margin-top:64px;
+  }
+
+  @media (max-width:640px){
+    .specimen-row{grid-template-columns:1fr;}
+    .palette-row{grid-template-columns:repeat(2,1fr);}
+    .mark-row{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div style="display:flex;align-items:center;gap:18px;">
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <text x="20" y="27" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="17" fill="#F6F4EF" letter-spacing="-1">ART</text>
+        </svg>
+      </div>
+      <div class="head-text">
+        <h1>Identity Kit</h1>
+        <p>Ayush Raj Tiwary — portfolio design system</p>
+      </div>
+    </div>
+    <div class="eyebrow">Decide once → v1</div>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <h2>Type</h2>
+      <span class="eyebrow">two free fonts</span>
+    </div>
+    <div class="specimen-row">
+      <div class="specimen">
+        <div class="role">Heading</div>
+        <div class="big">Ayush Raj<br>Tiwary</div>
+        <div class="meta"><b>Space Grotesk</b> · 500 / 600 / 700 · Google Fonts</div>
+      </div>
+      <div class="specimen body">
+        <div class="role">Body</div>
+        <div class="big">Precise work, quietly presented. Built with intent, shipped without noise.</div>
+        <div class="meta"><b>Inter</b> · 400 / 500 · Google Fonts</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Palette</h2>
+      <span class="eyebrow">tap a swatch to copy</span>
+    </div>
+    <div class="palette-row" id="palette">
+      <div class="swatch" data-hex="#1E4D45">
+        <div class="fill" style="background:#1E4D45"></div>
+        <div class="info"><div class="name">Teal — main</div><div class="hex">#1E4D45</div></div>
+        <div class="copied">copied</div>
+      </div>
+      <div class="swatch" data-hex="#14171C">
+        <div class="fill" style="background:#14171C"></div>
+        <div class="info"><div class="name">Ink — text</div><div class="hex">#14171C</div></div>
+        <div class="copied">copied</div>
+      </div>
+      <div class="swatch" data-hex="#F6F4EF">
+        <div class="fill" style="background:#F6F4EF;border-bottom:1px solid #DEDACF"></div>
+        <div class="info"><div class="name">Paper — bg</div><div class="hex">#F6F4EF</div></div>
+        <div class="copied">copied</div>
+      </div>
+      <div class="swatch" data-hex="#C68A32">
+        <div class="fill" style="background:#C68A32"></div>
+        <div class="info"><div class="name">Amber — accent</div><div class="hex">#C68A32</div></div>
+        <div class="copied">copied</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Logo / favicon</h2>
+      <span class="eyebrow">initials that spell the mission</span>
+    </div>
+    <div class="mark-row">
+      <div class="mark-item">
+        <div class="mark-lg"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><text x="20" y="27" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="17" fill="#F6F4EF" letter-spacing="-1">ART</text></svg></div>
+        <span>512px / social</span>
+      </div>
+      <div class="mark-item">
+        <div class="mark-md"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><text x="20" y="27" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="17" fill="#F6F4EF" letter-spacing="-1">ART</text></svg></div>
+        <span>64px / header</span>
+      </div>
+      <div class="mark-item">
+        <div class="mark-sm"><svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><text x="20" y="27" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="17" fill="#F6F4EF" letter-spacing="-1">ART</text></svg></div>
+        <span>16px / favicon</span>
+      </div>
+      <div class="mark-wordmark">
+        <div class="name-block">
+          Ayush Raj Tiwary
+          <span class="tag">A·R·T — the initials are the whole idea</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-bottom:0;">
+    <div class="section-head">
+      <h2>Style note</h2>
+      <span class="eyebrow">paste into your Claude Project</span>
+    </div>
+    <div class="note">
+      <div class="role">For the build</div>
+      <p>Space Grotesk for headings, Inter for body, on warm paper (#F6F4EF) with near-black ink (#14171C); deep teal (#1E4D45) carries the identity, amber (#C68A32) is used only as a single sparing accent.</p>
+      <p>The mood is precise and unhurried — a craftsperson's page, not a pitch deck — so the work stays the loudest thing on it.</p>
+      <div class="hexline">headings: Space Grotesk · body: Inter · teal #1E4D45 · ink #14171C · paper #F6F4EF · amber #C68A32</div>
+    </div>
+  </section>
+
+  <footer>Built once. Every page and case study inherits it.</footer>
+</div>
+
+<script>
+document.querySelectorAll('.swatch').forEach(function(sw){
+  sw.addEventListener('click', function(){
+    var hex = sw.getAttribute('data-hex');
+    if(navigator.clipboard){ navigator.clipboard.writeText(hex).catch(function(){}); }
+    sw.classList.add('copied-active');
+    setTimeout(function(){ sw.classList.remove('copied-active'); }, 900);
+  });
+});
+</script>
+</body>
+</html>
