@@ -1,1 +1,2 @@
-PASTE-YOUR-DEPLOYED-PAPER-URL-HERE
+https://github.com/ARTiwary/Ayush-Flyrank-internship/blob/main/work/notebooks/capstone.ipynb
+https://artiwaryflyrankpaper.netlify.app/
