@@ -1,45 +1,42 @@
-# Workflows, Agents, and MCP — and What FL-04 Would Need to Become an Agent
+# Explainer & Technical Walkthrough: From Workflows to Agents with MCP
 
-## Workflow vs. agent, in plain terms
+**Track:** General AI Fluency  
+**Assignment:** Agents, MCP & Pipelines  
+**Phase:** Build (core)  
 
-A **workflow** is a system where a human has already decided the steps, and code just calls the LLM at each fixed point. The path through the system is written in advance: step 1 always leads to step 2, which always leads to step 3. The LLM does the *thinking inside* each step, but it never decides *what step comes next* — that's hardcoded.
+---
 
-An **agent** is a system where the LLM itself decides what to do next, in a loop, based on what actually happens in the environment. It looks at a result (a tool call, a search, a piece of code running), decides whether that's enough, and chooses its own next action — call another tool, ask the human, or stop. Nobody wrote down in advance how many steps it will take or which tools it will use in which order.
+## 1. Workflows vs. Agents: The Definitive Distinction
 
-The distinction isn't about how "smart" or autonomous the system feels — it's architectural. Who controls the sequence: the code, or the model?
+According to Anthropic’s architectural framework (*Building Effective Agents*), the fundamental difference between a workflow and an agent lies in **control complexity and execution autonomy**. 
 
-## FL-04 classification: workflow, not agent
+* **Workflows** are systems where LLMs and utilities are orchestrated through **predefined, hardcoded code paths**. The sequence of operations, routing logic, and state transitions are strictly mapped out by the developer. The model executes specific subtasks sequentially or conditionally, but it does *not* dynamically decide its own execution path. Workflows offer high predictability, repeatability, and consistency.
+* **Agents**, conversely, are systems where the LLM **dynamically directs its own processes and tool usage**. Instead of following a rigid path, an agent evaluates its environment, plans its next steps, decides which tools to invoke based on intermediate results, and dynamically loops until it determines the task is complete. Agents provide massive flexibility and adaptability for open-ended problems, though they require robust guardrails to prevent infinite loops or unintended tool executions.
 
-My FL-04 pipeline ("Draft, Critique, Revise") is a **workflow**, specifically a **prompt chain**. The stages are fixed in a system prompt: Draft → Critique → Revise/Polish, always in that order, always three passes. The Claude Project follows the instructions I wrote; it doesn't decide whether to skip the critique stage, run it twice, or call in an outside source if the draft looks thin. NotebookLM feeds a digest in at the start, and a human reviews at the end — but nothing in the middle is deciding its own path. Even the "Devil's Advocate" persona is just another fixed step, not the model choosing to critique.
+---
 
-This matters because the pipeline works well *because* it's a workflow — it's predictable, cheap, and I can audit each handoff. An agent version would cost more (more tokens, more turns) for a task that doesn't need open-ended judgment about *what* to do next, only better judgment *within* each fixed step.
+## 2. Model Context Protocol (MCP) and Client-Server Decoupling
 
-## What MCP is, and its three primitives
+The **Model Context Protocol (MCP)**, pioneered by Anthropic, is an open standard that decouples AI models (Clients) from data sources and execution environments (Servers). 
 
-MCP (Model Context Protocol) is the standard way to plug external systems into an LLM application without writing a custom integration for every tool. Anthropic describes it as a USB-C port for AI apps — one connector shape, many devices. Instead of hardcoding "call the Gmail API this way, call the Notion API that way," an app just speaks MCP, and any MCP server (Gmail, filesystem, GitHub, whatever) exposes itself the same way.
+### Architectural Breakdown
+* **MCP Client:** The host application (such as Claude Desktop or the MCP Inspector developer interface) that holds the active LLM session and orchestrates context.
+* **MCP Server:** A lightweight, modular microservice that exposes specific capabilities—such as database query execution, file system read/write operations, or API integrations—via a standardized protocol.
+* **The Decoupling Value Proposition:** Before MCP, connecting every LLM client to a custom database or file system required building custom, brittle integrations for every single model provider or app. MCP standardizes the communication layer. This allows any MCP-compliant client to instantly discover, authenticate with, and leverage any MCP server without modifying the core model or host application codebase. It shifts architecture from monolithic integrations to a plug-and-play ecosystem.
 
-MCP defines three primitives a server can expose:
+---
 
-1. **Tools** — actions the model can invoke (send an email, run a query, create a file). These are the things that actually do something in the world.
-2. **Resources** — data the app can read and hand to the model as context (a file's contents, a database row, a webpage). These are read-only, model doesn't call them like functions — the client fetches them.
-3. **Prompts** — pre-written prompt templates the server offers, so a common task (e.g., "summarize this ticket") doesn't need to be reinvented by every client.
+## 3. Local MCP Implementation & Execution Proof
 
-The distinction that matters for the agent-vs-workflow question: tools are what give an LLM the ability to *act* in a loop against a live environment, rather than just talk about it.
+To demonstrate functional competence with MCP, a local **Secure Filesystem MCP Server** was initialized via `npx` and tested using the official `@modelcontextprotocol/inspector` developer dashboard. Three fundamental file operations (`list_directory`, `read_file`, and `write_file`) were executed to prove live local tool execution.
 
-## Connecting an MCP server and what it unlocked
+### 📸 MCP Execution Proof (Screenshots)
 
-I connected [NAME THE SERVER YOU ACTUALLY USE — filesystem / GitHub / etc.] as an MCP server in [Claude Desktop / Claude.ai connector / whichever client]. Three tasks I ran through it that plain chat could not do:
+**1. Listing Directory (`list_directory`):**
+![List Directory Proof](./list_directory.png)
 
-1. [Task 1 — e.g., "list and read the actual files in my FL-04 folder" — chat alone can't see my filesystem, this required a real tool call.]
-2. [Task 2 — e.g., "pull the latest commit history from the repo" — requires live GitHub API access, not something the model can know from training.]
-3. [Task 3 — e.g., "check today's date/weather/a live API value" — anything that changes after training cutoff and isn't searchable text.]
+**2. Reading Local File (`read_file`):**
+![Read File Proof](./read_file.png)
 
-Screenshots of each tool call are attached, showing the request going out and a real result coming back — not the model guessing or hallucinating an answer.
-
-## What FL-04 would need to become an agent
-
-Right now FL-04 has no tools and no feedback loop — it's three prompts run in sequence with a human checking the output at the end. To become an agent, the single most concrete upgrade would be:
-
-**Give the Critique stage a real tool to verify claims, and let the model decide when to stop revising.** Concretely: connect an MCP server that can search the web or query NotebookLM's sources directly, and instead of Stage 2 producing a static critique from memory, have it actually check the "claims that require precise source verification" it flags. Then loop Draft → Critique → Revise until the critique stage reports zero unresolved fact or logic flags (with a max-iteration cap), rather than always running exactly one revision pass. That single change — a tool call plus a model-decided stopping condition — is what would turn this from a fixed three-step chain into a genuine agent.
-
-*(~830 words)*
+**3. Writing Local Artifact (`write_file` / `mcp_audit`):**
+![Write File Proof](./mcp_audit.png)
